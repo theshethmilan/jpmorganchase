@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">jpmorganchase</string>
+    <string name="album_list">Album List</string>
+    <string name="no_data_found">No Data Found</string>
+</resources>

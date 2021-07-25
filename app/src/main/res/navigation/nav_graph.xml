@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/fragmentAlbums">
+    <fragment
+        android:id="@+id/fragmentAlbums"
+        android:name="com.milan.jpmorganchase.ui.fragments.albums.AlbumsFragment"
+        android:label="FragmentAlbums"
+        tools:layout="@layout/fragment_albums">
+        <action
+            android:id="@+id/action_fragmentAlbums_to_fragmentPhotos"
+            app:destination="@id/fragmentPhotos" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentPhotos"
+        android:name="com.milan.jpmorganchase.ui.fragments.photos.PhotosFragment"
+        android:label="FragmentPhotos"
+        tools:layout="@layout/fragment_photos" />
+</navigation>
