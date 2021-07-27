@@ -33,7 +33,7 @@ abstract class MyRoomDatabase : RoomDatabase() {
         }
     }
 
-    abstract fun daoAlbums(): daoAlbums?
+    abstract fun daoAlbums(): daoAlbums
 
-    abstract fun daoPhotos(): daoPhotos?
+    abstract fun daoPhotos(): daoPhotos
 }

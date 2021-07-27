@@ -36,6 +36,7 @@ class AlbumAdapter(private val listClickListener: ListClickListener) :
     }
 
     fun addAlbumList(albumList: ArrayList<AlbumResponseItem>) {
+        this.albumList.clear()
         this.albumList.addAll(albumList)
         notifyDataSetChanged()
     }

@@ -1,8 +1,13 @@
 package com.milan.jpmorganchase.ui.fragments.albums
 
+import android.app.job.JobScheduler
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,13 +15,15 @@ import com.google.android.material.snackbar.Snackbar
 import com.milan.jpmorganchase.R
 import com.milan.jpmorganchase.`interface`.ListClickListener
 import com.milan.jpmorganchase.api.ApiStatus
+import com.milan.jpmorganchase.database.dbTables.TableAlbums
 import com.milan.jpmorganchase.databinding.FragmentAlbumsBinding
 import com.milan.jpmorganchase.global.AppConst
 import com.milan.jpmorganchase.models.AlbumResponseItem
 import com.milan.jpmorganchase.ui.fragments.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_albums.*
+import kotlinx.coroutines.*
 
+@DelicateCoroutinesApi
 @AndroidEntryPoint
 class AlbumsFragment : BaseFragment<FragmentAlbumsBinding>() {
     private lateinit var albumAdapter: AlbumAdapter
@@ -42,7 +49,7 @@ class AlbumsFragment : BaseFragment<FragmentAlbumsBinding>() {
 
         albumAdapter = AlbumAdapter(listener)
 
-        rvAlbums.apply {
+        getDataBinding().rvAlbums.apply {
             adapter = albumAdapter
             layoutManager = LinearLayoutManager(activityMain)
             addItemDecoration(DividerItemDecoration(activityMain, DividerItemDecoration.VERTICAL))
@@ -59,6 +66,7 @@ class AlbumsFragment : BaseFragment<FragmentAlbumsBinding>() {
                     it.data.let { res ->
                         res?.let { album ->
                             album.sortWith(Comparator { o1, o2 -> o1.title.compareTo(o2.title) })
+                            insertAlbum(album)
                             albumAdapter.addAlbumList(album)
                         }
                     }
@@ -67,14 +75,60 @@ class AlbumsFragment : BaseFragment<FragmentAlbumsBinding>() {
                 ApiStatus.ERROR -> {
                     hideShowLayout(false)
                     activityMain.hideLoading()
-                    Snackbar.make(viewAlbums, it.error!!.trim(), Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(
+                        getDataBinding().viewAlbums,
+                        it.error!!.trim(),
+                        Snackbar.LENGTH_LONG
+                    ).show()
                 }
             }
         })
+
+        getAlbumFromDb()
+    }
+
+    private fun getAlbumFromDb() {
+        GlobalScope.launch(Dispatchers.Main) {
+            myRoomDatabase.daoAlbums().getAlbums().let {
+                if (it.isNotEmpty()) {
+                    activityMain.showLoading()
+                    val arrayListAlbumResponseItem = ArrayList<AlbumResponseItem>()
+                    for (i in it.indices) {
+                        arrayListAlbumResponseItem.add(
+                            AlbumResponseItem(
+                                it[i].userId!!.toInt(),
+                                it[i].albumTitle!!,
+                                it[i].albumId!!.toInt()
+                            )
+                        )
+                    }
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        albumAdapter.addAlbumList(arrayListAlbumResponseItem)
+                        activityMain.hideLoading()
+                        hideShowLayout(true)
+                    }, 2000)
+                } else {
+                    albumViewModel.getAlbumsList()
+                }
+            }
+        }
+    }
+
+    private fun insertAlbum(albumList: ArrayList<AlbumResponseItem>) {
+        for (i in albumList.indices) {
+            myRoomDatabase.daoAlbums().insertAlbums(
+                TableAlbums(
+                    albumList[i].userId.toString().trim(),
+                    albumList[i].id.toString().trim(),
+                    albumList[i].title.trim()
+                )
+            )
+        }
     }
 
     private fun hideShowLayout(isDataFound: Boolean) {
-        tvAblumsDataNotFound.visibility = if (isDataFound) View.GONE else View.VISIBLE
-        rvAlbums.visibility = if (isDataFound) View.VISIBLE else View.GONE
+        getDataBinding().tvAblumsDataNotFound.visibility =
+            if (isDataFound) View.GONE else View.VISIBLE
+        getDataBinding().rvAlbums.visibility = if (isDataFound) View.VISIBLE else View.GONE
     }
 }

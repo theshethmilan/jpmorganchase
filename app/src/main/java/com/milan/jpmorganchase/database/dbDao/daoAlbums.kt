@@ -14,5 +14,5 @@ interface daoAlbums {
     fun deleteAlbums()
 
     @Query("select * from tblAlbums")
-    fun getAlbums(): TableAlbums
+    suspend fun getAlbums(): List<TableAlbums>
 }

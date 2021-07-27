@@ -23,9 +23,9 @@ class AlbumFragmentViewModel @Inject constructor(private val mainRepository: Mai
     val vmAlbumRes: LiveData<ApiState<AlbumResponse>>
         get() = albumRes
 
-    init {
+    /*init {
         getAlbumsList()
-    }
+    }*/
 
     fun getAlbumsList() = viewModelScope.launch(coroutineContext) {
         albumRes.value = ApiState.loading()

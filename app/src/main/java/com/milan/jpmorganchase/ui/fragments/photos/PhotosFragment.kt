@@ -14,7 +14,6 @@ import com.milan.jpmorganchase.models.AlbumResponseItem
 import com.milan.jpmorganchase.models.PhotosResponseItem
 import com.milan.jpmorganchase.ui.fragments.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_photos.*
 
 @AndroidEntryPoint
 class PhotosFragment : BaseFragment<FragmentPhotosBinding>() {
@@ -36,13 +35,13 @@ class PhotosFragment : BaseFragment<FragmentPhotosBinding>() {
         val listener = object : ListClickListener {
             override fun onClickListener(view: View, pos: Int, objects: Any) {
                 val data = objects as PhotosResponseItem
-                Snackbar.make(viewPhotos, data.title.trim(), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(getDataBinding().viewPhotos, data.title.trim(), Snackbar.LENGTH_SHORT).show()
             }
         }
 
         photosAdapter = PhotosAdapter(listener)
 
-        rvPhotos.apply {
+        getDataBinding().rvPhotos.apply {
             adapter = photosAdapter
             layoutManager = GridLayoutManager(activityMain, 2)
             recycledViewPool.setMaxRecycledViews(0, 0)
@@ -66,14 +65,14 @@ class PhotosFragment : BaseFragment<FragmentPhotosBinding>() {
                 ApiStatus.ERROR -> {
                     hideShowLayout(false)
                     activityMain.hideLoading()
-                    Snackbar.make(viewPhotos, it.error!!.trim(), Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(getDataBinding().viewPhotos, it.error!!.trim(), Snackbar.LENGTH_LONG).show()
                 }
             }
         })
     }
 
     private fun hideShowLayout(isDataFound: Boolean) {
-        tvPhotosDataNotFound.visibility = if (isDataFound) View.GONE else View.VISIBLE
-        rvPhotos.visibility = if (isDataFound) View.VISIBLE else View.GONE
+        getDataBinding().tvPhotosDataNotFound.visibility = if (isDataFound) View.GONE else View.VISIBLE
+        getDataBinding().rvPhotos.visibility = if (isDataFound) View.VISIBLE else View.GONE
     }
 }
