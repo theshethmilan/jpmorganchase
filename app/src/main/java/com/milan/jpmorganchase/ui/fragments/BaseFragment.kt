@@ -14,8 +14,8 @@ import com.milan.jpmorganchase.database.MyRoomDatabase
 import com.milan.jpmorganchase.ui.activity.ActivityMain
 import javax.inject.Inject
 
-abstract class BaseFragment<dataBinding : ViewDataBinding> : Fragment() {
-    private lateinit var dataBinding: dataBinding
+abstract class BaseFragment<viewDataBinding : ViewDataBinding> : Fragment() {
+    private lateinit var dataBinding: viewDataBinding
     protected lateinit var controller: NavController
     protected lateinit var activityMain: ActivityMain
 

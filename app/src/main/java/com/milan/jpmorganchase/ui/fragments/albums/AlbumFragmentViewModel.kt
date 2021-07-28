@@ -1,6 +1,5 @@
 package com.milan.jpmorganchase.ui.fragments.albums
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,13 +18,7 @@ class AlbumFragmentViewModel @Inject constructor(private val mainRepository: Mai
     private val job = SupervisorJob()
     private val coroutineContext = Dispatchers.Main + job
 
-    private val albumRes = MutableLiveData<ApiState<AlbumResponse>>()
-    val vmAlbumRes: LiveData<ApiState<AlbumResponse>>
-        get() = albumRes
-
-    /*init {
-        getAlbumsList()
-    }*/
+    val albumRes = MutableLiveData<ApiState<AlbumResponse>>()
 
     fun getAlbumsList() = viewModelScope.launch(coroutineContext) {
         albumRes.value = ApiState.loading()

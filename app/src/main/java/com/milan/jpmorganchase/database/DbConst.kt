@@ -1,6 +1,6 @@
 package com.milan.jpmorganchase.database
 
 object DbConst {
-    const val DbVer = 1
-    const val DbName = "jpmorgan"
+    const val dbVer = 1
+    const val dbName = "jpmorgan.db"
 }

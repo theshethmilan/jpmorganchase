@@ -41,6 +41,7 @@ class PhotosAdapter(
     }
 
     fun addPhotosList(photosList: ArrayList<PhotosResponseItem>) {
+        this.photosList.clear()
         this.photosList.addAll(photosList)
         notifyDataSetChanged()
     }

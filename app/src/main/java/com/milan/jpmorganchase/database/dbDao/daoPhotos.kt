@@ -13,6 +13,6 @@ interface daoPhotos {
     @Query("delete from tblPhotos")
     fun deletePhotos()
 
-    @Query("select * from tblPhotos")
-    fun getPhotos(): TablePhotos
+    @Query("select * from tblPhotos where albumId =:strAlbumId")
+    suspend fun getPhotos(strAlbumId: String): List<TablePhotos>
 }

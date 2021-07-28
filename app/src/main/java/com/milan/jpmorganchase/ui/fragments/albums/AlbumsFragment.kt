@@ -55,7 +55,7 @@ class AlbumsFragment : BaseFragment<FragmentAlbumsBinding>() {
             addItemDecoration(DividerItemDecoration(activityMain, DividerItemDecoration.VERTICAL))
         }
 
-        albumViewModel.vmAlbumRes.observe(this, Observer {
+        albumViewModel.albumRes.observe(this, Observer {
             when (it.ApiStatus) {
                 ApiStatus.LOADING -> {
                     hideShowLayout(false)
@@ -96,9 +96,9 @@ class AlbumsFragment : BaseFragment<FragmentAlbumsBinding>() {
                     for (i in it.indices) {
                         arrayListAlbumResponseItem.add(
                             AlbumResponseItem(
-                                it[i].userId!!.toInt(),
+                                it[i].albumId!!.toInt(),
                                 it[i].albumTitle!!,
-                                it[i].albumId!!.toInt()
+                                it[i].userId!!.toInt()
                             )
                         )
                     }
@@ -115,6 +115,7 @@ class AlbumsFragment : BaseFragment<FragmentAlbumsBinding>() {
     }
 
     private fun insertAlbum(albumList: ArrayList<AlbumResponseItem>) {
+        myRoomDatabase.daoAlbums().deleteAlbums()
         for (i in albumList.indices) {
             myRoomDatabase.daoAlbums().insertAlbums(
                 TableAlbums(

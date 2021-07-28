@@ -14,7 +14,7 @@ import com.milan.jpmorganchase.database.dbTables.TablePhotos
         TableAlbums::class,
         TablePhotos::class
     ],
-    version = DbConst.DbVer,
+    version = DbConst.dbVer,
     exportSchema = false
 )
 abstract class MyRoomDatabase : RoomDatabase() {
@@ -24,7 +24,7 @@ abstract class MyRoomDatabase : RoomDatabase() {
         fun getDB(context: Context): MyRoomDatabase? {
             if (myDBInstance == null) {
                 myDBInstance =
-                    Room.databaseBuilder(context, MyRoomDatabase::class.java, DbConst.DbName)
+                    Room.databaseBuilder(context, MyRoomDatabase::class.java, DbConst.dbName)
                         .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
                         .allowMainThreadQueries()
                         .build()

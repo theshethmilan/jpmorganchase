@@ -1,12 +1,10 @@
 package com.milan.jpmorganchase.ui.fragments.photos
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.milan.jpmorganchase.api.ApiState
 import com.milan.jpmorganchase.models.PhotosResponse
-import com.milan.jpmorganchase.models.PhotosResponseItem
 import com.milan.jpmorganchase.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,9 +18,7 @@ class PhotosFragmentViewModel @Inject constructor(private val mainRepository: Ma
     private val job = SupervisorJob()
     private val coroutineContext = Dispatchers.Main + job
 
-    private val photosRes = MutableLiveData<ApiState<PhotosResponse>>()
-    val vmPhotosRes: LiveData<ApiState<PhotosResponse>>
-        get() = photosRes
+    val photosRes = MutableLiveData<ApiState<PhotosResponse>>()
 
     fun getPhotosList(albumId: String) = viewModelScope.launch(coroutineContext) {
         photosRes.value = ApiState.loading()
